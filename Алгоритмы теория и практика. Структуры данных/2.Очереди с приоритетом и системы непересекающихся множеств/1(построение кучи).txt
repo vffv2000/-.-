@@ -1,0 +1,26 @@
+class MinHeap:
+    def __init__(self):
+        self.n, self.h, self.result = int(input()), list(map(int, input().split())), []
+        for i in reversed(range(self.n//2)):
+            self.sift_down(i)
+        print(len(self.result))
+        print(*self.result, sep='\n')
+
+    def sift_down(self, i):
+        index = i
+        while True:
+            swap, lc, rc = index, 2 * index + 1, 2 * index + 2
+            if lc <= self.n-1 and self.h[lc] < self.h[swap]:
+                swap = lc
+            if rc <= self.n-1 and self.h[rc] < self.h[swap]:
+                swap = rc
+            if swap == index:
+                break
+            else:
+                self.result.append(f'{index} {swap}')
+                self.h[index], self.h[swap] = self.h[swap], self.h[index]
+                index = swap
+
+
+if __name__ == "__main__":
+    MinHeap()

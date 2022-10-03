@@ -1,0 +1,70 @@
+import sys
+
+
+#--------------------Decorator as performance counter-------------------------
+def count_perf(f):
+    import datetime
+    def wraper(*args, **kwargs):
+        time_init = datetime.datetime.now()
+        result = f(*args, **kwargs)
+        time_end = datetime.datetime.now()
+        total = time_end -  time_init
+       
+        return result
+    return wraper
+#-----------------------------------------------------------------------------------
+
+   
+
+@count_perf
+def Height(n, tree):
+    root = -1
+    height = 1
+    result = height
+    maxpath = 0
+    tmp_save = {} #Словарь содержащий уже рассчитанные значения листьев
+    for node in range(n):
+        parent = tree[node]
+
+        if parent == root:
+            tmp_save[node] = 1
+        else:
+            height += 1
+            while True:
+                 path = tree[parent]
+                 if path != root:
+                    
+                     if path in tmp_save:#Если имеется уже в словаре, берем значение
+                         height = height + tmp_save[path]
+                         tmp_save[node] = height #Сохраняем информацию о глубине
+                         if height > maxpath:
+                            maxpath = height
+                         height = 1
+                         break
+                     parent = path
+                     height += 1
+                 else:
+                        tmp_save[node] = height #Сохраняем информацию о глубине
+                        if height > maxpath:
+                            maxpath = height
+                        height = 1
+                        break
+    return maxpath
+
+
+def main():
+    n = int(input().strip() or 0)
+    array = input().split()
+    array = map(float, array)
+    array = list(map(round, array))
+    l = len(array)
+    if l != n:
+        n = l
+
+    return  Height(n, array)
+
+if __name__ == "__main__":
+     print(main())
+
+
+

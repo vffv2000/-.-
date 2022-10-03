@@ -1,0 +1,33 @@
+import sys
+
+
+class Tables:
+    def __init__(self, data):
+        n, m = map(int, next(data).split())
+        self.records = list(map(int, next(data).split()))
+        self.tables = [i for i in range(n)]
+        self.max = max(self.records)
+        for _ in range(m):
+            dest, source = map(int, next(data).split())
+            print(self.union(dest-1, source-1))
+
+    def find_root(self, index):
+        if index != self.tables[index]:
+            self.tables[index] = self.find_root(self.tables[index])
+        return self.tables[index]
+
+    def union(self, dest, source):
+        dest_id = self.find_root(dest)
+        source_id = self.find_root(source)
+
+        if self.tables[source_id] != self.tables[dest_id]:
+            self.records[dest_id] += self.records[source_id]
+            self.tables[source_id] = dest_id
+            if self.records[dest_id] > self.max:
+                self.max = self.records[dest_id]
+
+        return self.max if self.records[dest_id] < self.max else self.records[dest_id]
+
+
+if __name__ == "__main__":
+    Tables(sys.stdin)

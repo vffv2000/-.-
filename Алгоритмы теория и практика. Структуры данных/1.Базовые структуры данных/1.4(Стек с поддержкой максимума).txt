@@ -1,0 +1,13 @@
+
+num=int(input())
+spisok=[]
+for i in range(num):
+    command=input()
+    if command[:4]=="push":
+
+        spisok.append(int(command[5:]))
+    elif command=="pop":
+        spisok.pop()
+    elif command=="max":
+        print(max(spisok))
+

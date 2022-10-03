@@ -1,0 +1,46 @@
+class Phonebook:
+
+    def __init__(self):
+        self.contacts = dict()
+
+    def add(self, number, name):
+        self.contacts[number] = name
+
+    def find(self, number):
+        if number in self.contacts:
+            return self.contacts[number]
+        return "not found"
+
+    def delete(self, number):
+        if number in self.contacts:
+            del self.contacts[number]
+
+
+def telephone_book():
+    command: list
+    number: int
+    name: str
+    n: int
+    phonebook: Phonebook = Phonebook()
+
+    n = int(input())
+    for i in range(n):
+        command = input().split()
+        if command[0] == "add":
+            number, name = command[1], command[2]
+            phonebook.add(number, name)
+        elif command[0] == "find":
+            number = command[1]
+            print(phonebook.find(number))
+        else:
+            number = command[1]
+            phonebook.delete(number)
+
+
+def main():
+    telephone_book()
+
+
+if __name__ == "__main__":
+    main()
+    

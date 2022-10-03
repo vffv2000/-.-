@@ -1,0 +1,37 @@
+import sys
+stdin_fileno = sys.stdin
+a = []
+c = []
+i = 0
+k = 0
+err = 0
+for line in stdin_fileno:
+    for char in line:
+        i = i + 1
+        if (char == '(') or (char == '[') or (char == '{'):
+            a.append(char)
+            c.append(i)
+        elif ((char == ')') or (char == ']') or (char == '}')) and (err == 0):
+            if (len(a) == 0):
+                print(i)
+                err = 1
+            else:
+                top = a[-1]
+                a.pop(-1)
+                c.pop(-1)
+                if ((top == '(') and (char != ')')) or ((top == '[') and (char != ']')) or ((top == '{') and (char != '}')):
+                    print(i)
+                    err = 1
+                    
+        if char == '':
+            print('Success')
+            k = 1
+            err = 1
+            print('kek')
+            
+    if (len(a) == 0) and (i > 0) and (err == 0):
+        print('Success')
+        k = 1
+        
+    if (len(a) != 0) and (err == 0) and (k == 0):
+        print(c[-1])

@@ -1,0 +1,30 @@
+from collections import deque
+
+
+def hash_func():
+    m, p, X = int(input()), 1000000007, [1, 263]
+    hash_table = [deque() for _ in range(m)]
+    for _ in range(int(input())):
+        command, arg = input().split()
+        if command == "check":
+            print(' '.join(hash_table[int(arg)]))
+        else:
+            for _ in range(len(arg) - len(X)):
+                X.append((X[-1] * X[1]) % p)
+
+            chain = hash_table[sum(ord(c) * x for c, x in zip(arg, X)) % p % m]
+            contains = arg in chain
+            if command == "find":
+                print("yes" if contains else "no")
+            elif not contains and command == "add":
+                chain.appendleft(arg)
+            elif contains and command == "del":
+                chain.remove(arg)
+
+
+def main():
+    hash_func()
+
+
+if __name__ == "__main__":
+    main()

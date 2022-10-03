@@ -1,0 +1,32 @@
+import sys
+
+
+class Process:
+    def __init__(self, data):
+        self.result, self.data = 1, data
+        n, e, d = map(int, next(self.data).split())
+        self.djs = [i for i in range(n)]
+        self.dry(self.equal, e)
+        self.dry(self.not_equal, d) 
+        sys.stdout.write(str(self.result))
+
+    def equal(self, i, j):
+        if self.djs[i] == self.djs[j]:
+            return
+        else:
+            self.djs[j] = self.djs[i]
+
+    def not_equal(self, i, j):
+        if self.djs[i] == self.djs[j]:
+            self.result = 0
+
+    def dry(self, f, lines):
+        for _ in range(lines):
+            if not self.result:
+                break
+            i, j = map(int, next(self.data).split())
+            f(i-1, j-1)
+
+
+if __name__ == "__main__":
+    Process(sys.stdin)

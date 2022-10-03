@@ -1,0 +1,33 @@
+class Process:
+    def __init__(self, p_num, t_num, t_dur):
+        self.p_num, self.t_num = p_num, t_num
+        self.t_dur, self.swap = t_dur, None
+        self.h = [i for i in range(self.p_num)]
+
+    def dry(self, child):
+        if child < len(self.h) and self.h[child] < self.h[self.swap]:
+            self.swap = child
+
+    def sift_down(self, i):
+        index = i
+        while True:
+            self.swap = index
+            self.dry(2 * index + 1)
+            self.dry(2 * index + 2)
+            if self.swap == index:
+                break
+            else:
+                self.h[index], self.h[self.swap] = self.h[self.swap], self.h[index]
+                index = self.swap
+
+    def process(self):
+        for t in self.t_dur:
+            print(self.h[0] % self.p_num, self.h[0] // self.p_num)
+            self.h[0] += t * self.p_num
+            self.sift_down(0)
+
+
+if __name__ == "__main__":
+    proc, task = map(int, input().split())
+    task_dur = list(map(int, input().split()))
+    Process(proc, task, task_dur).process()

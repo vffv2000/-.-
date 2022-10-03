@@ -1,0 +1,112 @@
+import sys
+
+
+class mystack():
+    def __init__(self):
+        self._stack = list()
+        self._size = 0
+
+    def push(self, item):
+        self._stack.append(item)
+        self._size += 1
+
+    def pop(self):
+        top = self.top
+        if self._size <= 0:
+            raise IndexError
+        else:
+            del self._stack[-1]
+            self._size -= 1
+            return top
+
+    @property
+    def top(self):
+        if self._size <= 0:
+            raise IndexError
+        else:
+            return self._stack[-1]
+
+    @property
+    def size(self):
+        return self._size
+
+class myqueue():
+    def __init__(self, maxsize=None):
+        self._in = mystack()
+        self._out = mystack()
+        self._maxsize = maxsize
+        self._size = 0
+
+    def pushback(self, item):
+        if self._maxsize and self._size >= self._maxsize:
+            raise IndexError
+        else:
+            self._in.push(item)
+            self._size += 1
+     
+    def popfront(self):
+        if self._size <= 0:
+            raise IndexError
+        else:
+            if self._out.size == 0:
+                for _ in range(self._in.size):
+                    self._out.push(self._in.pop())
+            front = self._out.pop()
+            self._size -= 1
+            return front
+
+    @property
+    def front(self):
+        if self._size <= 0:
+            raise IndexError
+        else:
+            if self._out.size == 0:
+                for _ in range(self._in.size):
+                    self._out.push(self._in.pop())
+            return self._out.top
+
+    @property
+    def size(self):
+        return self._size
+
+    @property
+    def freespace(self):
+        return self._maxsize - self._size
+
+def handle_packages(processor, packages):
+    result_packages = [-1 for _ in range(packages.size)]
+    start_handle_time = 0
+    while True:
+        if packages.size > 0 and processor.size > 0:
+            if packages.front[1] < start_handle_time + processor.front[2]:
+                new_package = packages.popfront()
+                if processor.freespace > 0:
+                    processor.pushback(new_package)
+            else:
+                done_package = processor.popfront()
+                result_packages[done_package[0]] = start_handle_time
+                start_handle_time += done_package[2]
+        elif packages.size > 0:            
+            processor.pushback(packages.popfront())
+            start_handle_time = processor.front[1]
+        elif processor.size > 0:
+            done_package = processor.popfront()
+            result_packages[done_package[0]] = start_handle_time
+            start_handle_time += done_package[2]
+        else:
+            break
+
+    return result_packages
+
+size, n = map(int, next(sys.stdin).rstrip().split())
+processor = myqueue(size)
+packages = myqueue(n)
+
+for i in range(n):
+    arrival, duration = map(int, next(sys.stdin).rstrip().split())
+    packages.pushback([i, arrival, duration])
+
+if n > 0:
+    print(*handle_packages(processor, packages), sep='\n')
+else:
+    print()

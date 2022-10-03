@@ -1,0 +1,21 @@
+import sys
+
+
+def check_binary_tree_common():
+    def check(node=0, minv=-2 ** 31, maxv=2 ** 31 - 1):
+        return node == -1 or \
+               minv <= tree[node][0] <= maxv and \
+               check(tree[node][1], minv, tree[node][0] - 1) and \
+               check(tree[node][2], tree[node][0], maxv)
+
+    sys.setrecursionlimit(10 ** 5)
+    tree = [tuple(map(int, input().split())) for _ in range(int(input()))]
+    print('CORRECT' if not tree or check() else 'INCORRECT')
+
+
+def main():
+    check_binary_tree_common()
+
+
+if __name__ == "__main__":
+    main()
